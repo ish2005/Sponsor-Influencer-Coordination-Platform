@@ -1,0 +1,148 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Influencer's Dashboard</title>
+    <style>
+        body {
+            font-family: 'Comic Sans MS', cursive, sans-serif;
+            background-color: #C5E1A5;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+        }
+        .container {
+            width: 80%;
+            background-color: white;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .header h1 {
+            margin: 0;
+        }
+        .menu {
+            display: flex;
+            gap: 15px;
+        }
+        .menu a {
+            text-decoration: none;
+            color: black;
+            padding: 10px;
+            border-radius: 5px;
+        }
+        .menu a.active {
+            background-color: #cce5ff;
+        }
+        .content {
+            margin-top: 20px;
+        }
+        .section {
+            margin-top: 20px;
+        }
+        .section h2 {
+            margin: 10px 0;
+        }
+        .campaign-list, .influencer-list {
+            list-style-type: none;
+            padding: 0;
+        }
+        .campaign-item, .influencer-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 10px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            margin-bottom: 10px;
+        }
+        .buttons {
+            display: flex;
+            gap: 10px;
+        }
+        .buttons button {
+            padding: 10px 20px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+        .view-button {
+            background-color: #ffeeba;
+        }
+        .request-button {
+            background-color: #d4edda;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>{{ role }}</h1>
+            <div class="menu">
+                <a href="/sponsor_dashboard">Profile</a>
+                <a href="{{ sponsor_name }}/find" class="active">Find</a>
+                <a href="stats">Stats</a>
+                <a href="/">Logout</a>
+            </div>
+        </div>
+        <div class="content">
+            <div class="section">
+                
+                <ul class="campaign-list">
+                    {% for campaign in campaigns %}
+                    <li class="campaign-item">
+                        <span>{{ campaign.name }} | {{ campaign.niche }}</span>
+                        <div class="buttons">
+                            <button class="view-button">view</button>
+                            <button class="request-button">request to influencer</button>
+                            <div id="details-{{ loop.index }}" class="campaign-details">
+                            <p><strong>Description:</strong> {{ campaign['description'] }}</p>
+                            <p><strong>Niche:</strong> {{ campaign['niche'] }}</p>
+                            <p><strong>Start Date:</strong> {{ campaign['start_date'] }}</p>
+                            <p><strong>End Date:</strong> {{ campaign['end_date'] }}</p>
+                            <p><strong>Progress:</strong> {{ campaign['progress'] }}%</p>
+                        </div>
+                    </li>
+                    {% endfor %}
+                </ul>
+            </div>
+            <div class="section">
+                <h2>Influencers</h2>
+                <ul class="influencer-list">
+                    {% for influencer in influencers %}
+                    <li class="influencer-item">
+                        <span>{{ influencer.name }} | Niche: {{ influencer.niche }} |  Platform: {{ influencer.Platform }} | Followers: {{ influencer.followers }}</span>
+                        <div class="buttons">
+                            <button class="view-button">view</button>
+                        </div>
+\                        </div>
+                    </div>
+                        </div>
+                    </li>
+                    {% endfor %}
+                </ul>
+            </div>
+        </div>
+    </div>
+    <script>
+        function toggleDetails(detailsId) {
+            var details = document.getElementById(detailsId);
+            if (details.style.display === 'none' || details.style.display === '') {
+                details.style.display = 'block';
+            } else {
+                details.style.display = 'none';
+            }
+        }
+    </script>
+</body>
+
+
+</html>

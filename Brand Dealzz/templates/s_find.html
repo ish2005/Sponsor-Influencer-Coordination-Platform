@@ -1,0 +1,274 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Sponsor Dashboard</title>
+    <style>
+        body {
+            font-family: 'Comic Sans MS', cursive, sans-serif;
+            background-color: #C5E1A5;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+        }
+        .container {
+            width: 80%;
+            background-color: white;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .header h1 {
+            margin: 0;
+        }
+        .menu {
+            display: flex;
+            gap: 15px;
+        }
+        .menu a {
+            text-decoration: none;
+            color: black;
+            padding: 10px;
+            border-radius: 5px;
+        }
+        .menu a.active {
+            background-color: #cce5ff;
+        }
+        .content {
+            margin-top: 20px;
+        }
+        .section {
+            margin-top: 20px;
+        }
+        .section h2 {
+            margin: 10px 0;
+        }
+        .campaign-list, .influencer-list {
+            list-style-type: none;
+            padding: 0;
+        }
+        .campaign-item, .influencer-item {
+            display: flex;
+            flex-direction: column;
+            padding: 10px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            margin-bottom: 10px;
+        }
+        .campaign-header, .influencer-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            width: 100%;
+        }
+        .buttons {
+            display: flex;
+            gap: 10px;
+        }
+        .buttons a, .buttons button {
+            padding: 10px 20px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            text-decoration: none;
+            color: black;
+        }
+        .view-button {
+            background-color: #ffeeba;
+        }
+        .request-button {
+            background-color: #d4edda;
+        }
+        .campaign-details, .influencer-details {
+            display: none;
+            flex-direction: column;
+            align-items: flex-start;
+            padding: 10px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            background-color: #f9f9f9;
+            margin-top: 10px;
+            width: 100%;
+        }
+
+        /* Modal Styles */
+        .modal {
+            display: none;
+            position: fixed;
+            z-index: 1;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            overflow: auto;
+            background-color: rgb(0,0,0);
+            background-color: rgba(0,0,0,0.4);
+            padding-top: 60px;
+        }
+        .modal-content {
+            background-color: #fefefe;
+            margin: 5% auto;
+            padding: 20px;
+            border: 1px solid #888;
+            width: 80%;
+        }
+        .close {
+            color: #aaa;
+            float: right;
+            font-size: 28px;
+            font-weight: bold;
+        }
+        .close:hover,
+        .close:focus {
+            color: black;
+            text-decoration: none;
+            cursor: pointer;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>{{ role }}</h1>
+            <div class="menu">
+                <a href="/sponsor_dashboard/{{ sponsor_name }}">Profile</a>
+                <a href="/sponsor_dashboard/{{ sponsor_name }}/on_going_campaigns">On Going Campaigns</a>
+                <a href="" class="active">Find</a>
+                <a href="/sponsor_dashboard/{{ sponsor_name }}/stats">Stats</a>
+                <a href="/">Logout</a>
+            </div>
+        </div>
+        <div class="content">
+            <div class="section">
+                <ul class="campaign-list">
+                    {% for campaign in campaigns %}
+                    <li id="campaign-{{ loop.index }}" class="campaign-item">
+                        <div class="campaign-header">
+                            <span>{{ campaign.name }} | {{ campaign.niche }}</span>
+                            <div class="buttons">
+                                <button class="view-button" onclick="toggleDetails('campaign-{{ loop.index }}')">view</button>
+                                <button class="request-button" onclick="openModal('{{ campaign.name }}', '{{ campaign.description }}', '{{ campaign.budget }}')">request to influencer</button>
+                            </div>
+                        </div>
+                        <div class="campaign-details" id="details-campaign-{{ loop.index }}">
+                            <p><strong>Description:</strong> {{ campaign['description'] }}</p>
+                            <p><strong>Niche:</strong> {{ campaign['niche'] }}</p>
+                            <p><strong>Start Date:</strong> {{ campaign['start_date'] }}</p>
+                            <p><strong>End Date:</strong> {{ campaign['end_date'] }}</p>
+                            <p><strong>Progress:</strong> {{ campaign['progress'] }}%</p>
+                        </div>
+                    </li>
+                    {% endfor %}
+                </ul>
+            </div>
+            <div class="section">
+                <h2>Influencers</h2>
+                <ul class="influencer-list">
+                    {% for influencer in influencers %}
+                    <li id="influencer-{{ loop.index }}" class="influencer-item">
+                        <div class="influencer-header">
+                            <span>{{ influencer.name }} | Niche: {{ influencer.niche }} | Platform: {{ influencer.Platform }} | Followers: {{ influencer.followers }}</span>
+                            <div class="buttons">
+                                <button class="view-button" onclick="toggleDetails('influencer-{{ loop.index }}')">view</button>
+                            </div>
+                        </div>
+                        <div class="influencer-details" id="details-influencer-{{ loop.index }}">
+                            <p><strong>Name:</strong> {{ influencer.name }}</p>
+                            <p><strong>Niche:</strong> {{ influencer.niche }}</p>
+                            <p><strong>Platform:</strong> {{ influencer.Platform }}</p>
+                            <p><strong>Followers:</strong> {{ influencer.followers }}</p>
+                        </div>
+                    </li>
+                    {% endfor %}
+                </ul>
+            </div>
+        </div>
+    </div>
+
+    <!-- The Modal -->
+    <div id="myModal" class="modal">
+        <div class="modal-content">
+            <span class="close">&times;</span>
+            <h2>Request an Influencer</h2>
+            <form id="requestForm" method="post" action="{{ sponsor_name }}/request_influencer">
+                <div id="modalCampaignDetails"></div>
+                <input type="hidden" id="campaignName" name="campaign_name">
+                <input type="hidden" id="campaignDescription" name="campaign_description">
+                <input type="hidden" id="campaignBudget" name="campaign_budget">
+                <label for="username">Username:</label>
+                <input type="text" id="username" name="username" required>
+                <ul class="influencer-list">
+                    {% for influencer in influencers %}
+                    <li id="modal-influencer-{{ loop.index }}" class="influencer-item">
+                        <div class="influencer-header">
+                            <span>{{ influencer.name }} | Niche: {{ influencer.niche }} | Platform: {{ influencer.Platform }} | Followers: {{ influencer.followers }}</span>
+                            <button type="button" class="request-button" onclick="selectInfluencer('{{ influencer.name }}')">select</button>
+                        </div>
+                    </li>
+                    {% endfor %}
+                </ul>
+                <button type="submit" class="request-button">Send Request</button>
+            </form>
+        </div>
+    </div>
+
+    <script>
+        function toggleDetails(detailsId) {
+            var details = document.getElementById('details-' + detailsId);
+            if (details.style.display === 'block') {
+                details.style.display = 'none';
+            } else {
+                details.style.display = 'block';
+            }
+        }
+
+        var modal = document.getElementById("myModal");
+        var span = document.getElementsByClassName("close")[0];
+
+        function openModal(campaignName, campaignDescription, campaignBudget) {
+            var modalCampaignDetails = document.getElementById("modalCampaignDetails");
+            document.getElementById('campaignName').value = campaignName;
+            document.getElementById('campaignDescription').value = campaignDescription;
+            document.getElementById('campaignBudget').value = campaignBudget;
+            modalCampaignDetails.innerHTML = `
+                <p><strong>Campaign Name:</strong> ${campaignName}</p>
+                <p><strong>Description:</strong> ${campaignDescription}</p>
+                <p><strong>Budget:</strong> ${campaignBudget}</p>
+            `;
+            modal.style.display = "block";
+        }
+
+        function selectInfluencer(influencerName) {
+            var usernameField = document.getElementById('username');
+            usernameField.value = influencerName;
+        }
+
+        span.onclick = function() {
+            modal.style.display = "none";
+        }
+
+        window.onclick = function(event) {
+            if (event.target == modal) {
+                modal.style.display = "none";
+            }
+        }
+
+    </script>
+</body>
+</html>
+
+
+
+
+
+
+
+

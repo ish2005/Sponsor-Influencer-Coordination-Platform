@@ -1,0 +1,154 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ad Requests Status</title>
+    <style>
+        body {
+            font-family: 'Comic Sans MS', cursive, sans-serif;
+            background-color: #C5E1A5;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+        }
+        .container {
+            width: 80%;
+            background-color: white;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            overflow: auto;
+        }
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .header h1 {
+            margin: 0;
+        }
+        .menu {
+            display: flex;
+            gap: 15px;
+        }
+        .menu a {
+            text-decoration: none;
+            color: black;
+            padding: 10px;
+            border-radius: 5px;
+        }
+        .menu a.active {
+            background-color: #cce5ff;
+        }
+        .content {
+            margin-top: 20px;
+        }
+        .section {
+            margin-top: 20px;
+        }
+        .section h2 {
+            margin: 10px 0;
+        }
+        .campaign-list, .influencer-list {
+            list-style-type: none;
+            padding: 0;
+        }
+        .campaign-item, .influencer-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 10px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            margin-bottom: 10px;
+        }
+        .buttons {
+            display: flex;
+            gap: 10px;
+        }
+        .buttons button {
+            padding: 10px 20px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+        .view-button {
+            background-color: #ffeeba;
+        }
+        .request-button {
+            background-color: #d4edda;
+        }
+        .search-filter {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 20px;
+        }
+        .search-filter input[type="text"] {
+            padding: 10px;
+            width: 80%;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+        }
+        .search-filter button {
+            padding: 10px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            background-color: #cce5ff;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+        }
+        th, td {
+            padding: 10px;
+            text-align: left;
+            border-bottom: 1px solid #ddd;
+        }
+        th {
+            background-color: #f2f2f2;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>Ad Requests Status</h1>
+            <div class="menu">
+                <a href="/influencer_dashboard/{{ influencer_name }}" >Profile</a>
+                <a href="/influencer_dashboard/{{influencer_name}}/find">Find</a>
+                <a href="" class="active" >Request Status</a>
+                <a href="/influencer_dashboard/{{ influencer_name }}/campaigns" >On Going Campaigns</a>
+                <a href="/influencer_dashboard/{{ influencer_name }}/stats">Stats</a>
+                <a href="/">Logout</a>
+            </div>
+        </div>
+        <div class="content">
+            <table>
+                <thead>
+                    <tr>
+                        <th>Sponsor</th>
+                        <th>Earning</th>
+                        <th>Status</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for ad in ad_requests %}
+                    <tr>
+                        <td>{{ ad[0] }}</td>
+                        <td>{{ ad[1] }}</td>
+                        <td>{{ ad[2] }}</td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+</body>
+</html>
+

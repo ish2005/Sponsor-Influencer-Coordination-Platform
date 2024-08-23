@@ -1,0 +1,226 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin's Dashboard</title>
+    <style>
+        body {
+            font-family: 'Comic Sans MS', cursive, sans-serif;
+            background-color: #C5E1A5;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+        }
+
+        .container {
+            width: 80%;
+            background-color: white;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .header h1 {
+            margin: 0;
+        }
+
+        .menu {
+            display: flex;
+            gap: 15px;
+        }
+
+        .menu a {
+            text-decoration: none;
+            color: black;
+            padding: 10px;
+            border-radius: 5px;
+        }
+
+        .menu a.active {
+            background-color: #cce5ff;
+        }
+
+        .campaign-list, .influencer-list {
+            list-style-type: none;
+            padding: 0;
+        }
+
+        .campaign-item, .influencer-item {
+            display: flex;
+            flex-direction: column;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            margin-bottom: 10px;
+            position: relative;
+            padding: 10px;
+        }
+
+        .campaign-header, .influencer-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .buttons {
+            display: flex;
+            gap: 10px;
+        }
+
+        .view-button, .request-button, .flag-button {
+            padding: 10px 20px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+
+        .view-button {
+            background-color: #ffeeba;
+        }
+
+        .request-button {
+            background-color: #d4edda;
+        }
+
+        .flag-button {
+            background-color: #f8d7da;
+        }
+
+        .campaign-details, .influencer-details {
+            display: none;
+            background-color: #f9f9f9;
+            padding: 10px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            margin-top: 10px;
+        }
+    </style>
+    <script>
+        function toggleDetails(id) {
+            const details = document.getElementById('details-' + id);
+            if (details.style.display === 'none' || details.style.display === '') {
+                details.style.display = 'block';
+            } else {
+                details.style.display = 'none';
+            }
+        }
+
+        function flagSponsor(description) {
+            fetch('/flag_influencer', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({ username: username })
+            })
+            alert('Description: ' + description);
+        }
+
+        function flagInfluencer(username) {
+            fetch('/flag_influencer', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({ username: username })
+            }).then(response => {
+                if (response.ok) {
+                    alert('Influencer flagged successfully.');
+                } else {
+                    alert('Failed to flag influencer.');
+                }
+            });
+        }
+    </script>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>Admin's Dashboard</h1>
+            <div class="menu">
+                <a href="/admin" >Info</a>
+                <a href="/admin/find" >Find</a>
+                <a href="" class="active">Flagged Campaigns</a>
+                <a href="/admin/stats">Stats</a>
+                <a href="/">Logout</a>
+            </div>
+        </div>
+        <div>
+            <input type="text" placeholder="Search">
+            <button>Filter</button>
+        </div>
+        <h2>Sponsors</h2>
+        <ul class="campaign-list">
+            {% for sponsor in sponsors %}
+            <li id="campaign-{{ loop.index }}" class="campaign-item">
+                <div class="campaign-header">
+                    <span>{{ sponsor.name }} | {{ sponsor.niche }}</span>
+                    <div class="buttons">
+                        <button class="view-button" onclick="toggleDetails('campaign-{{ loop.index }}')">view</button>
+                        <form  method="POST" style="display: inline;">
+                            <input type="hidden" name="request" value="{{ sponsor['id'] }}">
+                            <input type="hidden" name="action" value="1">
+                            <button type="submit" class="flag-button">Remove</button>
+                        </form>
+                        <!--<button class="flag-button" onclick="flagSponsor('{{ sponsor.id }}')">Flag</button>-->
+                    </div>
+                </div>
+                <div class="campaign-details" id="details-campaign-{{ loop.index }}">
+                    <p><strong>Campaign id:</strong> {{ sponsor.id }}</p>
+                    <p><strong>Created By:</strong> {{ sponsor.createdby }}</p>
+                    <p><strong>Sponsor Name:</strong> {{ sponsor.name }}</p>
+                    <p><strong>Description:</strong> {{ sponsor.description }}</p>
+                    <p><strong>Niche:</strong> {{ sponsor.niche }}</p>
+                    <p><strong>Start Date:</strong> {{ sponsor.start_date }}</p>
+                    <p><strong>End Date:</strong> {{ sponsor.end_date }}</p>
+                    <p><strong>Progress:</strong> {{ sponsor.progress }}%</p>
+                </div>
+            </li>
+            {% endfor %}
+        </ul>
+        <h2>Influencers</h2>
+        <div>
+        <ul class="influencer-list">
+            {% for influencer in influencers %}
+            <li id="influencer-{{ loop.index }}" class="influencer-item">
+                <div class="influencer-header">
+                    <span>{{ influencer.name }} | Niche: {{ influencer.niche }} | Platform: {{ influencer.Platform }} | Followers: {{ influencer.followers }}</span>
+                    <div class="buttons">
+                        <button class="view-button" onclick="toggleDetails('influencer-{{ loop.index }}')" >view</button>
+                        <form  method="POST" style="display: inline;">
+                            <input type="hidden" name="request" value="{{ influencer['username'] }}">
+                            <input type="hidden" name="action" value="1">
+                            <button type="submit" class="flag-button">Remove</button>
+                        </form>
+                        <!-- <button class="flag-button" onclick="flagInfluencer('{{ influencer.name }}')">Flag</button> -->
+                    </div>
+                </div>
+                <div class="influencer-details" id="details-influencer-{{ loop.index }}">
+                    
+                    <p><strong>Name:</strong> {{ influencer.name }}</p>
+                    <p><strong>Niche:</strong> {{ influencer.niche }}</p>
+                    <p><strong>Platform:</strong> {{ influencer.Platform }}</p>
+                    <p><strong>Followers:</strong> {{ influencer.followers }}</p>
+                    <p><strong>Platform Userid:</strong> {{ influencer.Platform_username }}</p>
+                    <p><strong>Email:</strong> {{ influencer.email }}</p>
+                    <p><strong>Earnings:</strong> {{ influencer.earnings }}</p>
+                    <p><strong>Username:</strong> {{ influencer.username }}</p>
+
+                </div>
+            </li>
+            {% endfor %}
+        </ul>
+        </div>
+    </div>
+</body>
+
+</html>

@@ -1,0 +1,284 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Sponsor Dashboard</title>
+    <style>
+        body {
+            font-family: 'Comic Sans MS', cursive, sans-serif;
+            background-color: #C5E1A5;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+        }
+        .container {
+            width: 80%;
+            background-color: white;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .header h1 {
+            margin: 0;
+        }
+        .menu {
+            display: flex;
+            gap: 15px;
+        }
+        .menu a {
+            text-decoration: none;
+            color: black;
+            padding: 10px;
+            border-radius: 5px;
+        }
+        .menu a.active {
+            background-color: #cce5ff;
+        }
+        .content {
+            margin-top: 20px;
+        }
+        .content h2 {
+            margin: 10px 0;
+        }
+        .campaign {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 10px;
+            position: relative;
+        }
+        .campaign button {
+            border: none;
+            padding: 5px 10px;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+        .view-button {
+            background-color: #ffeb3b;
+        }
+        .accept-button {
+            background-color: #81c784;
+        }
+        .reject-button {
+            background-color: #e57373;
+        }
+        .add-button {
+            font-family: 'Comic Sans MS', cursive, sans-serif;
+            padding: 5px 20px;
+            font-size: 12px;
+            border: none;
+            border-radius: 5px;
+            background-color: #4caf50;
+            color: white;
+            cursor: pointer;
+            z-index: 100; /* Increase z-index */
+        }
+        .form-container {
+            margin-top: 20px;
+        }
+        .form-group {
+            margin-bottom: 15px;
+        }
+        .form-group label {
+            display: block;
+            margin-bottom: 5px;
+        }
+        .form-group input, .form-group textarea {
+            width: 100%;
+            padding: 8px;
+            box-sizing: border-box;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+        }
+        .submit-button {
+            padding: 10px 20px;
+            background-color: #4caf50;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+        .campaign-details {
+            display: none;
+            border: 1px solid #ccc;
+            padding: 10px;
+            border-radius: 5px;
+            margin-top: 10px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>Sponsor Dashboard</h1>
+            <div class="menu">
+                <a href="" class="active">Profile</a>
+                <a href="{{ sponsor_name }}/on_going_campaigns">On Going Campaigns</a>
+                <a href="{{ sponsor_name }}/find">Find</a>
+                <a href="{{ sponsor_name }}/stats">Stats</a>
+                <a href="/">Logout</a>
+            </div>
+        </div>
+        <div class="content">
+            <h2>Welcome {{ sponsor_name }}</h2>
+            <h3>Active Campaigns:</h3>
+            <div id="campaign-list">
+                {% for campaign in campaigns %}
+                <div class="campaign">
+                    <span>{{ campaign['name'] }} | Progress {{ campaign['progress'] }}%</span>
+                    <button class="view-button" onclick="toggleDetails('campaign-details-{{ loop.index }}')">View</button>
+                </div>
+                <div id="campaign-details-{{ loop.index }}" class="campaign-details">
+                    <p><strong>Description:</strong> {{ campaign['description'] }}</p>
+                    <p><strong>Niche:</strong> {{ campaign['niche'] }}</p>
+                    <p><strong>Start Date:</strong> {{ campaign['start_date'] }}</p>
+                    <p><strong>End Date:</strong> {{ campaign['end_date'] }}</p>
+                    <p><strong>Budget:</strong> {{ campaign['budget'] }}</p>
+                </div>
+                {% endfor %}
+            </div>
+<h3>New Requests:</h3>
+<div id="ad-requests">
+    {% for request in ad_requests %}
+    <div class="ad-request">
+        <span>{{ request['username'] }} | {{ request['status'] }}</span>
+        <div>
+            <button class="view-button" onclick="toggleDetails('ad-request-details-{{ loop.index }}')">View</button>
+        </div>
+    </div>
+    <div id="ad-request-details-{{ loop.index }}" class="ad-request-details" style="display: none;">
+        <p><strong>Influencer:</strong> {{ request['username'] }}</p>
+        <p><strong>Requirements:</strong> {{ request['requirements'] }}</p>
+        <p><strong>Payment Amount:</strong> {{ request['payment_amount'] }}</p>
+        <p><strong>Description:</strong> {{ request['description'] }}</p>
+
+        <div class="status-and-buttons">
+            <p><strong>Status:</strong> {{ request['status'] }}</p>
+            <div class="buttons">
+                <form  method="POST" style="display: inline;">
+                    <input type="hidden" name="request_id" value="{{ request['id'] }}">
+                    <input type="hidden" name="username" value="{{ request['username'] }}">
+                    <input type="hidden" name="budget" value="{{ request['payment_amount'] }}">
+                    <input type="hidden" name="action" value="accept">
+                    <button type="submit" class="accept-button">Accept</button>
+                </form>
+                <form  method="POST" style="display: inline;">
+                    <input type="hidden" name="request_id" value="{{ request['id'] }}">
+                    <input type="hidden" name="username" value="{{ request['username'] }}">
+                    <input type="hidden" name="budget" value="{{ request['payment_amount'] }}">
+                    <input type="hidden" name="action" value="reject">
+                    <button type="submit" class="reject-button">Reject</button>
+                </form>
+            </div>
+        </div>
+    </div>
+    {% endfor %}
+</div>
+        </div>
+            <button class="add-button" onclick="toggleForm()">Click To Add New Campaign</button>
+            <div class="form-container" id="formContainer" style="display: none;">
+                <form id="campaignForm" method="POST">
+                    <div class="form-group">
+                        <label for="name">Campaign Name:</label>
+                        <input type="text" id="name" name="name" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="description">Description:</label>
+                        <textarea id="description" name="description" required></textarea>
+                    </div>
+                    <div class="form-group">
+                        <label for="niche">Niche:</label>
+                        <input type="text" id="niche" name="niche" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="start_date">Start Date:</label>
+                        <input type="date" id="start_date" name="start_date" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="end_date">End Date:</label>
+                        <input type="date" id="end_date" name="end_date" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="budget">Budget:</label>
+                        <input type="number" id="budget" name="budget" required>
+                    </div>
+                    <button type="submit" class="submit-button">Submit</button>
+                </form>
+            </div>
+        </div>
+    </div>
+    <script>
+        function toggleForm() {
+            var formContainer = document.getElementById("formContainer");
+            if (formContainer.style.display === "none" || formContainer.style.display === "") {
+                formContainer.style.display = "block";
+            } else {
+                formContainer.style.display = "none";
+            }
+        }
+
+        function toggleDetails(id) {
+        var details = document.getElementById(id);
+        if (details.style.display === "none" || details.style.display === "") {
+            details.style.display = "block";
+        } else {
+            details.style.display = "none";
+        }
+    }
+    function acceptRequest(id) {
+        // Add your logic for accepting the request here
+        console.log("Accepted request with ID:", id);
+    }
+
+    function rejectRequest(id) {
+        // Add your logic for rejecting the request here
+        console.log("Rejected request with ID:", id);
+    }
+    </script>
+    <style>
+        .ad-request {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 10px;
+        }
+        .ad-request-details {
+            padding-left: 20px;
+        }
+        .status-and-buttons {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .buttons {
+            display: flex;
+            gap: 10px;
+        }
+        .view-button, .accept-button, .reject-button {
+            margin-left: 10px;
+            padding: 5px 10px;
+            border: none;
+            border-radius: 3px;
+            cursor: pointer;
+        }
+        .accept-button {
+            background-color: #4CAF50;
+            color: white;
+        }
+        .reject-button {
+            background-color: #f44336;
+            color: white;
+        }
+    </style>
+</body>
+</html>
+
+

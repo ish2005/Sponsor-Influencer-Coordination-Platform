@@ -1,0 +1,138 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Campaign Management</title>
+    <style>
+        body {
+            font-family: 'Comic Sans MS', cursive, sans-serif;
+            background-color: #C5E1A5;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+        }
+        .container {
+            width: 80%;
+            background-color: white;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .header h1 {
+            margin: 0;
+        }
+        .menu {
+            display: flex;
+            gap: 15px;
+        }
+        .menu a {
+            text-decoration: none;
+            color: black;
+            padding: 10px;
+            border-radius: 5px;
+        }
+        .menu a.active {
+            background-color: #cce5ff;
+        }
+        .campaign-list {
+            list-style-type: none;
+            padding: 0;
+        }
+        .campaign-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 10px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            margin-bottom: 10px;
+            position: relative;
+        }
+        .campaign-buttons {
+            display: flex;
+            gap: 10px;
+        }
+        .campaign-buttons button {
+            padding: 10px 20px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+        .view-button {
+            background-color: #ffeeba;
+        }
+        .request-button {
+            background-color: #d4edda;
+        }
+        .campaign-details {
+            display: none;
+            position: absolute;
+            top: 50px;
+            left: 0;
+            width: 100%;
+            background-color: #f9f9f9;
+            padding: 10px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            z-index: 1;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>{{influencer_name}} Dashboard</h1>
+            <div class="menu">
+                <a href="/influencer_dashboard/{{ influencer_name }}" >Profile</a>
+                <a href="/influencer_dashboard/{{influencer_name}}/find">Find</a>
+                <a href="/influencer_dashboard/{{ influencer_name }}/status" >Request Status</a>
+                <a href="" class="active" >On Going Campaigns</a>
+                <a href="/influencer_dashboard/{{ influencer_name }}/stats">Stats</a>
+                <a href="/">Logout</a>
+            </div>
+        </div>
+
+        <div class="campaign-list">
+            {% for campaign in campaigns %}
+            <div class="campaign-item">
+                <div>
+                    <strong>{{ campaign['name'] }}</strong><br>
+                    Description: {{ campaign['description'] }}
+                </div>
+                <div class="campaign-buttons">
+                    <button class="view-button" onclick="toggleDetails('details-{{ loop.index }}')">View</button>
+                </div>
+                <div id="details-{{ loop.index }}" class="campaign-details">
+                    <p><strong>Description:</strong> {{ campaign['description'] }}</p>
+                    <p><strong>Niche:</strong> {{ campaign['niche'] }}</p>
+                    <p><strong>Start Date:</strong> {{ campaign['start_date'] }}</p>
+                    <p><strong>End Date:</strong> {{ campaign['end_date'] }}</p>
+                    <p><strong>Progress:</strong> {{ campaign['progress'] }}%</p>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+    <script>
+        function toggleDetails(detailsId) {
+            var details = document.getElementById(detailsId);
+            if (details.style.display === 'none' || details.style.display === '') {
+                details.style.display = 'block';
+            } else {
+                details.style.display = 'none';
+            }
+        }
+    </script>
+</body>
+</html>
+

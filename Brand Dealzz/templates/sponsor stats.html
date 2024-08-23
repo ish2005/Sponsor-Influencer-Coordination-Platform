@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Stats Dashboard</title>
+    <style>
+        body {
+            font-family: 'Comic Sans MS', cursive, sans-serif;
+            background-color: #C5E1A5;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+        }
+        .container {
+            width: 80%;
+            background-color: white;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .header h1 {
+            margin: 0;
+        }
+        .menu {
+            display: flex;
+            gap: 15px;
+        }
+        .menu a {
+            text-decoration: none;
+            color: black;
+            padding: 10px;
+            border-radius: 5px;
+        }
+        .menu a.active {
+            background-color: #cce5ff;
+        }
+        .stats-container {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 20px;
+            margin-top: 20px;
+        }
+        .chart {
+            flex: 1 1 calc(50% - 20px);
+            height: 200px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            box-sizing: border-box;
+        }
+        .chart.pie-chart {
+            flex: 1 1 100%;
+            height: 200px;
+        }
+        .chart img {
+            max-width: 100%;
+            max-height: 100%;
+            object-fit: contain;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>Sponsor Statistics</h1>
+            <div class="menu">
+                <a href="/sponsor_dashboard/{{ sponsor_name }}">Profile</a>
+                <a href="/sponsor_dashboard/{{ sponsor_name }}/on_going_campaigns">On Going Campaigns</a>
+                <a href="/sponsor_dashboard/{{ sponsor_name }}/find" >Find</a>
+                <a href="" class="active">Stats</a>
+                <a href="/">Logout</a>
+            </div>
+        </div>
+        <div class="stats-container">
+            <div class="chart bar-chart">
+                <img src="{{ url_for('static', filename='sponsor_bar_chart_1_' + sponsor_name + '.png') }}" alt="Bar Chart 1">
+            </div>
+            <div class="chart bar-chart">
+                <img src="{{ url_for('static', filename='sponsor_bar_chart_2_' + sponsor_name + '.png') }}" alt="Bar Chart 2">
+            </div>
+            <div class="chart pie-chart">
+                <img src="{{ url_for('static', filename='sponsor_pie_chart_' + sponsor_name + '.png') }}" alt="Pie Chart">
+            </div>
+        </div>
+    </div>
+</body>
+</html>

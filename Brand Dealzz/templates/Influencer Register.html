@@ -1,0 +1,183 @@
+<!DOCTYPE html>
+
+<html>
+    <head>
+        <style>body {
+            background: #C5E1A5;
+          }
+          form {
+            width: 60%;
+            margin: 60px auto;
+            background: #efefef;
+            padding: 60px 120px 80px 120px;
+            text-align: center;
+            -webkit-box-shadow: 2px 2px 3px rgba(0,0,0,0.1);
+            box-shadow: 2px 2px 3px rgba(0,0,0,0.1);
+          }
+          label {
+            display: block;
+            position: relative;
+            margin: 40px 0px;
+          }
+          .label-txt {
+            position: absolute;
+            top: -1.6em;
+            padding: 10px;
+            font-family: sans-serif;
+            font-size: .8em;
+            letter-spacing: 1px;
+            color: rgb(120,120,120);
+            transition: ease .3s;
+          }
+          .input {
+            width: 100%;
+            padding: 10px;
+            background: transparent;
+            border: none;
+            outline: none;
+            font-family: sans-serif;
+            font-size: .8em;
+            letter-spacing: 1px;
+            color: rgb(120,120,120);
+            transition: ease .3s;
+          }
+          
+          .line-box {
+            position: relative;
+            width: 100%;
+            height: 2px;
+            background: #BCBCBC;
+          }
+          
+          .line {
+            position: absolute;
+            width: 0%;
+            height: 2px;
+            top: 0px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: #8BC34A;
+            transition: ease .6s;
+          }
+          
+          .input:focus + .line-box .line {
+            width: 100%;
+          }
+          
+          .label-active {
+            top: -3em;
+          }
+          
+          button {
+            display: inline-block;
+            padding: 12px 24px;
+            background: rgb(220,220,220);
+            font-weight: bold;
+            color: rgb(120,120,120);
+            border: none;
+            outline: none;
+            border-radius: 3px;
+            cursor: pointer;
+            transition: ease .3s;
+          }
+          
+          button:hover {
+            background: #8BC34A;
+            color: #ffffff;
+          }
+          .button {
+            border: none;
+            color: white;
+            padding: 10px 20px;
+            text-align: center;
+            text-decoration: none;
+            display: inline-block;
+            font-size: 16px;
+            margin: 4px 2px;
+            cursor: pointer;
+            border-radius: 12px;
+            font-family: 'Comic Sans MS', cursive, sans-serif;
+        }
+
+        .youtube {
+            background-color: #ffcccc;
+            color: black;
+        }
+
+        .twitter {
+            background-color: #cce5ff;
+            color: black;
+        }
+
+        .insta {
+            background-color: #ffffcc;
+            color: black;
+        }
+
+        .register {
+            background-color: #ffff99;
+            color: black;
+            padding: 12px 24px;
+        }
+
+        .container {
+            text-align: center;
+            margin-top: 50px;
+        }
+          </style>
+    </head>
+    <body>
+      <form method="POST">
+        <h1>Influencer Registration</h1>
+        <label>
+            <input type="text" class="input" id="name" name="name" placeholder="ENTER YOUR NAME" required>
+            <div class="line-box">
+                <div class="line"></div>
+            </div>
+        </label>
+        <label>
+          <input type="email" class="input" id="email" name="email" placeholder="ENTER YOUR EMAIL" required>
+          <div class="line-box">
+              <div class="line"></div>
+          </div>
+      </label>
+        <label>
+            <input type="text" class="input" id="platform" name="platform" placeholder="ENTER YOUR PLATFORM" required>
+            <div class="line-box">
+                <div class="line"></div>
+            </div>
+        </label>
+        <label>
+            <input type="text" class="input" id="type_of_content" name="type_of_content" placeholder="ENTER TYPE OF CONTENT" required>
+            <div class="line-box">
+                <div class="line"></div>
+            </div>
+        </label>
+        <label>
+            <input type="number" class="input" id="followers" name="followers" placeholder="ENTER NUMBER OF FOLLOWERS" required>
+            <div class="line-box">
+                <div class="line"></div>
+            </div>
+        </label>
+        <label>
+            <input type="text" class="input" id="userid" name="userid" placeholder="ENTER YOUR USER ID" required>
+            <div class="line-box">
+                <div class="line"></div>
+            </div>
+        </label>
+        <label>
+            <input type="text" class="input" id="username" name="username" placeholder="ENTER YOUR USERNAME" required>
+            <div class="line-box">
+                <div class="line"></div>
+            </div>
+        </label>
+        <label>
+          <input type="password" class="input" id="password" name="password" placeholder="ENTER YOUR PASSWORD" required>
+          <div class="line-box">
+              <div class="line"></div>
+          </div>
+        </label>
+        <button type="submit">SUBMIT</button>
+    </form>
+    </body>
+</html>

@@ -1,0 +1,224 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{{ influencer_name }} Dashboard</title>
+    <style>
+        body {
+            font-family: 'Comic Sans MS', cursive, sans-serif;
+            background-color: #d5edc7;
+            margin: 0;
+            padding: 0;
+        }
+        .dashboard {
+            background-color: white;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 0 10px rgba(0,0,0,0.1);
+            width: 80%;
+            margin: 20px auto;
+            max-width: 1200px;
+        }
+        .nav {
+            display: flex;
+            justify-content: space-around;
+            border-bottom: 2px solid #ccc;
+            padding: 10px 0;
+            margin-bottom: 20px;
+            background-color: #f7f7f7;
+            border-radius: 10px 10px 0 0;
+        }
+        .nav a {
+            text-decoration: none;
+            color: black;
+            font-weight: bold;
+            padding: 10px;
+        }
+        .nav a.active {
+            color: blue;
+        }
+        .header {
+            display: flex;
+            justify-content: flex-start;
+            align-items: center;
+            padding-bottom: 10px;
+            border-bottom: 2px solid #ccc;
+            margin-bottom: 20px;
+        }
+        .profile-pic {
+            width: 80px;
+            height: 80px;
+            background-color: lightgreen;
+            border-radius: 50%;
+        }
+        .profile-info {
+            margin-left: 20px;
+        }
+        .profile-info p {
+            margin: 5px 0;
+        }
+        .active-campaigns, .new-requests {
+            margin-bottom: 20px;
+        }
+        .campaign, .request {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border: 1px solid #ccc;
+            padding: 10px;
+            margin-top: 10px;
+            border-radius: 5px;
+        }
+        .buttons {
+            display: flex;
+            gap: 10px;
+        }
+        .button {
+            padding: 5px 10px;
+            border: none;
+            cursor: pointer;
+            border-radius: 5px;
+            font-size: 0.9em;
+        }
+        .view-button {
+            background-color: yellow;
+        }
+        .accept-button {
+            background-color: lightgreen;
+        }
+        .reject-button {
+            background-color: pink;
+        }
+        /* Additional CSS for ad requests */
+        .ad-request {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 10px;
+        }
+        .ad-request-details {
+            padding-left: 20px;
+        }
+        .status-and-buttons {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .buttons {
+            display: flex;
+            gap: 10px;
+        }
+        .view-button, .accept-button, .reject-button {
+            margin-left: 10px;
+            padding: 5px 10px;
+            border: none;
+            border-radius: 3px;
+            cursor: pointer;
+        }
+        .accept-button {
+            background-color: #4CAF50;
+            color: white;
+        }
+        .reject-button {
+            background-color: #f44336;
+            color: white;
+        }
+    </style>
+</head>
+<body>
+    <div class="dashboard">
+        <div class="nav">
+            <a href="" class="active">Profile</a>
+            <a href="{{ influencer_name }}/find">Find</a>
+            <a href="{{ influencer_name }}/status">Request Status</a>
+            <a href="{{ influencer_name }}/campaigns">On Going Campaigns</a>
+            <a href="{{ influencer_name }}/stats">Stats</a>
+            <a href="/">Logout</a>
+        </div>
+        <div class="header">
+            <div class="profile-info">
+                <p>Welcome {{ influencer_name }}</p>
+                <p>Earnings: ${{ earnings }}</p>
+            </div>
+        </div>
+        <div class="active-campaigns">
+            <h2>New Requests:</h2>
+            {% for campaign in campaigns %}
+            <div class="campaign">
+                <p>{{ campaign.name }} | Progress: {{ campaign.progress }}%</p>
+                <button class="button view-button">View</button>
+            </div>
+            {% endfor %}
+        </div>      
+        <!-- Ad Requests Section -->
+        <div id="ad-requests">
+            {% for request in ad_requests %}
+            <div class="ad-request">
+                <span>{{ request['username'] }} | {{ request['status'] }}</span>
+                <div>
+                    <button class="view-button" onclick="toggleDetails('ad-request-details-{{ loop.index }}')">View</button>
+                </div>
+            </div>
+            <div id="ad-request-details-{{ loop.index }}" class="ad-request-details" style="display: none;">
+                <p><strong>Sponsor:</strong> {{ request['username'] }}</p>
+               <!-- <p><strong>Niche:</strong> {{ request['niche'] }}</p> -->
+                <p><strong>Campaign Price:</strong> {{ request['payment_amount'] }}</p>
+                <p><strong>Description:</strong> {{ request['description'] }}</p>
+
+                <div class="status-and-buttons">
+                    <p><strong>Status:</strong> {{ request['status'] }}</p>
+                    <div class="buttons">
+                        <form method="POST" style="display: inline;">
+                            <input type="hidden" name="request_id" value="{{ request['id'] }}">
+                            <input type="hidden" name="username" value="{{ request['name'] }}">
+                            <input type="hidden" name="budget" value="{{ request['payment_amount'] }}">
+                            <input type="hidden" name="action" value="accept">
+                            <button type="submit" class="accept-button">Accept</button>
+                        </form>
+                        <form method="POST" style="display: inline;">
+                            <input type="hidden" name="request_id" value="{{ request['id'] }}">
+                            <input type="hidden" name="username" value="{{ request['name'] }}">
+                            <input type="hidden" name="budget" value="{{ request['payment_amount'] }}">
+                            <input type="hidden" name="action" value="reject">
+                            <button type="submit" class="reject-button">Reject</button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+
+    <script>
+        function toggleForm() {
+            var formContainer = document.getElementById("formContainer");
+            if (formContainer.style.display === "none" || formContainer.style.display === "") {
+                formContainer.style.display = "block";
+            } else {
+                formContainer.style.display = "none";
+            }
+        }
+
+        function toggleDetails(id) {
+            var details = document.getElementById(id);
+            if (details.style.display === "none" || details.style.display === "") {
+                details.style.display = "block";
+            } else {
+                details.style.display = "none";
+            }
+        }
+
+        function acceptRequest(id) {
+            console.log("Accepted request with ID:", id);
+        }
+
+        function rejectRequest(id) {
+            console.log("Rejected request with ID:", id);
+        }
+    </script>
+</body>
+</html>
+
+
+
